@@ -1,0 +1,15 @@
+{
+  "editor.guides.indentation": true,
+  "editor.guides.highlightActiveIndentation": true,
+  "editor.guides.bracketPairs": "active",
+  "workbench.colorCustomizations": {
+    // "editorIndentGuide.background1": "#FF5555",
+    "editorIndentGuide.background2": "#F1C40F",
+    "editorIndentGuide.background3": "#33CC33",
+    "editorIndentGuide.background4": "#3498DB",
+    "editorIndentGuide.background5": "#9B59B6",
+    "editorIndentGuide.background6": "#E67E22"
+  },
+  "WillLuke.nextjs.addTypesOnSave": true,
+  "WillLuke.nextjs.hasPrompted": true
+}

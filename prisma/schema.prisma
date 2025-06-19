@@ -1,21 +1,137 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+/// Database configuration
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
+    previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
-    schemas  = ["public"]
+    provider   = "postgresql"
+    url        = env("DATABASE_URL")
+    extensions = [vector]
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
+/// Represents a user in the system
+model User {
+    // Core fields
+    id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([name])
+    // Authentication & Profile
+    emailAddress String  @unique
+    firstName    String?
+    lastName     String?
+    imageURL     String?
+
+    // Business Logic
+    credits Int @default(150)
+
+    // Relations
+    UserToProjects UserToProject[]
+    questionsAsked Question[]
+}
+
+model SourceCodeEmbedding {
+    // Core fields
+    id String @id @default(cuid())
+
+    // Source Code Details
+    summaryEmbedding Unsupported("vector(768)")?
+    sourceCode       String
+    filename         String
+    summary          String
+
+    // Foreign Keys
+    projectId String
+
+    // Relations
+    project Project @relation(fields: [projectId], references: [id])
+}
+
+/// Represents a project in the system
+model Project {
+    // Core fields
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Project Details
+    name      String
+    githubUrl String
+
+    // Soft Delete
+    deleteAt DateTime?
+
+    // Relations
+    UserToProjects UserToProject[]
+
+    commits             Commit[]
+    SourceCodeEmbedding SourceCodeEmbedding[]
+
+    savedQuestions Question[]
+}
+
+/// Junction table for User-Project many-to-many relationship
+model UserToProject {
+    // Core fields
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Foreign Keys
+    userId    String
+    projectId String
+
+    // Relations
+    user    User    @relation(fields: [userId], references: [id])
+    project Project @relation(fields: [projectId], references: [id])
+
+    // Constraints
+    @@unique([userId, projectId])
+}
+
+model Question {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Question Details
+    question String
+    answer   String
+
+    filesReferences Json?
+
+    // Foreign Keys
+    projectId String
+    userId    String
+
+    // Relations
+    project Project @relation(fields: [projectId], references: [id])
+    user    User    @relation(fields: [userId], references: [id])
+}
+
+model Commit {
+    // Core fields
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Foreign Keys
+    projectId String
+
+    // Relations
+    project Project @relation(fields: [projectId], references: [id])
+
+    // Commit Details
+    commitMessage      String
+    commitHash         String
+    commitAuthorName   String
+    commitAuthorAvatar String
+    commitdate         DateTime
+
+    // Summary
+    summary String
 }
