@@ -39,10 +39,10 @@ export const getCommitHashes = async (githubUrl: string): Promise<Response[]> =>
         const owner = secondLastPart
         
         if (!owner || !repo) {
-            throw new Error(`Invalid github url: ${githubUrl}`)
+            throw new Error(`URL GitHub invalide: ${githubUrl}`)
         }
         
-        console.log(`Fetching commits for owner: ${owner}, repo: ${repo}`)
+        console.log(`Récupération des commits pour owner: ${owner}, repo: ${repo}`)
         
         // Appel à l'API GitHub pour récupérer la liste des commits
         const {data} = await octokit.rest.repos.listCommits({
@@ -57,15 +57,15 @@ export const getCommitHashes = async (githubUrl: string): Promise<Response[]> =>
         
         // Retourne les 10 premiers commits avec leurs détails formatés
         return sortedCommits.slice(0, 10).map((commit: any) => ({
-            commitMessage: commit.commit.message ?? 'No message',
+            commitMessage: commit.commit.message ?? 'Aucun message',
             commitHash: commit.sha as string,
             commitAuthorName: commit.commit?.author?.name ?? "",
             commitAuthorAvatar: commit.author?.avatar_url ?? "",
             commitDate: commit.commit?.author?.date ?? "",
         }))
     } catch (error) {
-        console.error('Error fetching commits:', error)
-        throw new Error(`Failed to fetch commits from ${githubUrl}: ${error instanceof Error ? error.message : 'Unknown error'}`)
+        console.error('Erreur lors de la récupération des commits:', error)
+        throw new Error(`Erreur lors de la récupération des commits de ${githubUrl}: ${error instanceof Error ? error.message : 'Erreur inconnue'}`)
     }
 }
 
@@ -92,7 +92,7 @@ export const pollCommits = async (projectId: string) => {
             if (response.status === 'fulfilled') {
                 return response.value as string
             }
-            return "No summary available"
+            return "Aucun résumé disponible"
         })
         // console.log(summaries)
 
@@ -131,7 +131,7 @@ async function summariseCommits(githubUrl: string, commitHash: string) {
             Accept: 'application/vnd.github.v3.diff'
         }
     })
-    return await aiSummariseCommit(data) || "No summary available"
+    return await aiSummariseCommit(data) || "Aucun résumé disponible"
 }
 
 /**
@@ -153,7 +153,7 @@ async function fetchProjectGithubUrl(projectId: string) {
         
         // Vérification que le projet existe et a une URL GitHub
         if (!project?.githubUrl) {
-            throw new Error("Project not found or no github url")
+            throw new Error("Projet non trouvé ou aucune URL GitHub")
         }
         
         return {
@@ -161,8 +161,8 @@ async function fetchProjectGithubUrl(projectId: string) {
             githubUrl: project.githubUrl,
         }
     } catch (error) {
-        console.error('Error fetching project GitHub URL:', error)
-        throw new Error(`Failed to fetch project GitHub URL for project ${projectId}: ${error instanceof Error ? error.message : 'Unknown error'}`)
+        console.error('Erreur lors de la récupération de l\'URL GitHub du projet:', error)
+        throw new Error(`Erreur lors de la récupération de l\'URL GitHub du projet ${projectId}: ${error instanceof Error ? error.message : 'Erreur inconnue'}`)
     }
 }
 
@@ -187,8 +187,8 @@ async function filterUnprocessedCommits(projectId: string, commitsHashes: Respon
         )
         return unprocessedCommits
     } catch (error) {
-        console.error('Error filtering unprocessed commits:', error)
-        throw new Error(`Failed to filter unprocessed commits for project ${projectId}: ${error instanceof Error ? error.message : 'Unknown error'}`)
+        console.error('Erreur lors du filtrage des commits non traités:', error)
+        throw new Error(`Erreur lors du filtrage des commits non traités pour le projet ${projectId}: ${error instanceof Error ? error.message : 'Erreur inconnue'}`)
     }
 }
 

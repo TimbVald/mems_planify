@@ -72,6 +72,8 @@ model Project {
     SourceCodeEmbedding SourceCodeEmbedding[]
 
     savedQuestions Question[]
+
+    meetings Meeting[]
 }
 
 /// Junction table for User-Project many-to-many relationship
@@ -91,6 +93,49 @@ model UserToProject {
 
     // Constraints
     @@unique([userId, projectId])
+}
+
+model Meeting {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Meeting Details
+    meetingUrl String
+    name       String
+
+    // Foreign Keys
+    projectId String
+
+    // Relations
+    project Project @relation(fields: [projectId], references: [id])
+
+    status MeetingStatus @default(PROCESSING)
+
+    issues Issue[]
+}
+
+model Issue {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    start    String
+    end      String
+    gist     String
+    headline String
+    summary  String
+
+    // Foreign Keys
+    meetingId String
+
+    // Relations
+    meeting Meeting @relation(fields: [meetingId], references: [id])
+}
+
+enum MeetingStatus {
+    PROCESSING
+    COMPLETED
 }
 
 model Question {

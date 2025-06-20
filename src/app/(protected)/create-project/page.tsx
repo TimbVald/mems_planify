@@ -29,12 +29,12 @@ const CreatePage = () => {
             githubToken: data.githubToken
         }, {
             onSuccess: () => {
-                toast.success('Project created successfully')
+                toast.success('Projet créé avec succès')
                 refetch()
                 reset()
             },
             onError: () => {
-                toast.error('Failed to create project')
+                toast.error('Erreur lors de la création du projet')
             }
         })
         return true
@@ -46,10 +46,10 @@ const CreatePage = () => {
             <div>
                 <div>
                     <h1 className='font-bold text-2xl'>
-                        Link to your GitHub Repository
+                        Lien vers votre dépôt GitHub
                     </h1>
                     <p className='text-sm text-muted-foreground'>
-                        Enter the URL of your repository to link it to Mem&apos;s Planify
+                        Entrez l&apos;URL de votre dépôt pour le lier à Mem&apos;s Planify
                     </p>
                 </div>
                 <div className="h-4"></div>
@@ -57,30 +57,30 @@ const CreatePage = () => {
                     <form action="" onSubmit={handleSubmit(onSubmit)}>
                         <Input
                             {...register('projectName', { required: true })}
-                            placeholder='Project Name'
+                            placeholder='Nom du projet'
                             required
                         />
                         <div className="h-2"></div>
                         <Input
                             {...register('repoUrl', { required: true })}
-                            placeholder='Github URL'
+                            placeholder='URL Github'
                             type='url'
                             required
                         />
                         <div className="h-2"></div>
                         <Input
                             {...register('githubToken')}
-                            placeholder='Github Token (Optional)'
+                            placeholder='Github Token (Optionnel)'
                         />
                         <div className="h-4"></div>
                         <Button type='submit' disabled={createProject.isPending}>
                             {createProject.isPending ? (
                                 <>
                                     <Loader2 className='w-4 h-4 animate-spin mr-2' />
-                                    Creating...
+                                    Création du projet...
                                 </>
                             ) : (
-                                'Create Project'
+                                'Créer le projet'
                             )}
                         </Button>
                     </form>

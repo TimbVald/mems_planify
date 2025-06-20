@@ -17,6 +17,8 @@ import { readStreamableValue } from 'ai/rsc'
 import CodeReferences from './code-references'
 import { api } from '~/trpc/react'
 import { toast } from 'sonner'
+import useRefetch from '~/hooks/use-refetch'
+import { Save, X } from 'lucide-react'
 
 const askQuestionCard = () => {
     const { project } = useProject()
@@ -47,6 +49,8 @@ const askQuestionCard = () => {
         setIsLoading(false)
     }
 
+    const refetch = useRefetch()
+
     return (
         <>
             <Dialog open={open} onOpenChange={setOpen}>
@@ -64,14 +68,15 @@ const askQuestionCard = () => {
                                 filesReferences
                             }, {
                                 onSuccess: () => {
-                                    toast.success('Answer saved')
+                                    toast.success('Cette réponse a été enregistrée avec succès')
+                                    refetch()
                                 },
                                 onError: () => {
-                                    toast.error('Failed to save answer')
+                                    toast.error('Erreur lors de l\'enregistrement de la réponse, veuillez réessayer')
                                 }
                             })
                         }}>
-                            Save Answer
+                           <Save className='w-4 h-4 mr-2' />Enregistrer la réponse
                         </Button>
                         </div>
                     </DialogHeader>
@@ -80,22 +85,22 @@ const askQuestionCard = () => {
                     <CodeReferences filesReferences={filesReferences} />
 
                     <Button type='button' onClick={() => {setOpen(false)}}>
-                        Close
+                        <X className='w-4 h-4 mr-2' />Fermer
                     </Button>
                 </DialogContent>
             </Dialog>
             <Card className='relative col-span-3'>
                 <CardHeader>
                     <CardTitle>
-                        Ask a Question
+                        Poser une question consernant votre projet, envoyer et <span className='font-bold'>Mem&apos;s AI</span> vous répondra avec des réponses détaillées et des exemples de code.
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form action="" onSubmit={onSubmit}>
-                        <Textarea placeholder='Quel fichier dois-je éditer pour changer la page d&apos;accueil ?' value={question} onChange={(e) => setQuestion(e.target.value)} />
+                        <Textarea placeholder='Quel fichier dois-je éditer pour changer la page d&apos;accueil ?' value={question} onChange={(e) => setQuestion(e.target.value)} disabled={isLoading} />
                         <div className='h-4'></div>
                         <Button type='submit' disabled={isLoading}>
-                            Demander à Mem&apos;s AI !
+                            Envoyer à Mem&apos;s AI
                         </Button>
                     </form>
                 </CardContent>

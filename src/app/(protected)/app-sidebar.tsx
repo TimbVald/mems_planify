@@ -24,22 +24,22 @@ import useProject from "~/hooks/use-project";
 // Définition des éléments de navigation
 const navigationItems = [
     {
-        title: "Dashboard",
+        title: "Tableau de bord",
         url: "/dashboard",
         icon: LayoutDashboard,
     },
     {
-        title: "Q&A",
+        title: "Questions & Réponses",
         url: "/qa",
         icon: Bot,
     },
     {
-        title: "Meeting",
-        url: "/meeting", // Correction de l'URL
+        title: "Réunions",
+        url: "/meetings",
         icon: Presentation,
     },
     {
-        title: "Billing",
+        title: "Facturation",
         url: "/billing",
         icon: CreditCard,
     },
@@ -89,7 +89,7 @@ export function AppSidebar() {
 
                 <SidebarGroup>
                     <SidebarGroupLabel>
-                        Your Projects
+                        Vos Projets
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
@@ -120,7 +120,7 @@ export function AppSidebar() {
                                     <Link href="/create-project" className="w-full">
                                         <Button size='sm' variant="outline" className="w-full">
                                             <Plus className="size-4" />
-                                            <span className="ml-2">Create Project</span>
+                                            <span className="ml-2">Créer un projet</span>
                                         </Button>
                                     </Link>
                                 </SidebarMenuItem>
